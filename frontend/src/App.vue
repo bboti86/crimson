@@ -412,4 +412,32 @@ li:last-child {
 .legend-color.estimated {
   background-color: #EED9C4;
 }
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #1a1a1a;
+    color: white;
+  }
+  .period-form, .periods-list, .calendar-container {
+    background-color: #2a2a2a;
+    box-shadow: none;
+  }
+  input[type="date"] {
+    background-color: #3a3a3a;
+    color: white;
+    border-color: #4a4a4a;
+  }
+  li {
+    border-bottom-color: #3a3a3a;
+  }
+  .header {
+    border-bottom-color: #3a3a3a;
+  }
+  .day.estimated {
+    background-color: #4a4a4a;
+  }
+  .legend-color.estimated {
+    background-color: #4a4a4a;
+  }
+}
 </style>
