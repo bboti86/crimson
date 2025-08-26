@@ -12,7 +12,7 @@ services:
     build: ./frontend
     container_name: crimson-cycle-frontend
     ports:
-      - "8080:80"
+      - "8888:80"
     depends_on:
       - backend
     restart: always
