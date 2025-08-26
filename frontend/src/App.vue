@@ -10,53 +10,59 @@
       {{ statusMessage }}
     </div>
 
-    <!-- Form for adding new periods -->
-    <div class="middle-section period-form">
-      <form @submit.prevent="addPeriod">
-        <div class="form-group">
-          <label for="start-date">Start Date:</label>
-          <input type="date" id="start-date" v-model="newPeriod.start_date" required>
+    <div class="main-content">
+      <div class="left-column">
+        <!-- Form for adding new periods -->
+        <div class="middle-section period-form">
+          <form @submit.prevent="addPeriod">
+            <div class="form-group">
+              <label for="start-date">Start Date:</label>
+              <input type="date" id="start-date" v-model="newPeriod.start_date" required>
+            </div>
+            <div class="form-group">
+              <label for="end-date">End Date:</label>
+              <input type="date" id="end-date" v-model="newPeriod.end_date" required>
+            </div>
+            <button type="submit">Add Period</button>
+          </form>
         </div>
-        <div class="form-group">
-          <label for="end-date">End Date:</label>
-          <input type="date" id="end-date" v-model="newPeriod.end_date" required>
-        </div>
-        <button type="submit">Add Period</button>
-      </form>
-    </div>
 
-    <!-- Calendar View -->
-    <div class="calendar-container">
-      <div class="calendar">
-        <div class="header">
-          <button @click="prevMonth">&lt;</button>
-          <span>{{ currentMonthName }} {{ currentYear }}</span>
-          <button @click="nextMonth">&gt;</button>
-        </div>
-        <div class="days">
-          <div v-for="day in weekdays" :key="day" class="day-name">{{ day }}</div>
-          <div v-for="day in calendarDays" :key="day.date" class="day" :class="day.classes">
-            {{ day.day }}
+        <!-- Calendar View -->
+        <div class="calendar-container">
+          <div class="calendar">
+            <div class="header">
+              <button @click="prevMonth">&lt;</button>
+              <span>{{ currentMonthName }} {{ currentYear }}</span>
+              <button @click="nextMonth">&gt;</button>
+            </div>
+            <div class="days">
+              <div v-for="day in weekdays" :key="day" class="day-name">{{ day }}</div>
+              <div v-for="day in calendarDays" :key="day.date" class="day" :class="day.classes">
+                {{ day.day }}
+              </div>
+            </div>
+          </div>
+          <div class="legend">
+            <div><span class="legend-color period"></span> Period</div>
+            <div><span class="legend-color estimated"></span> Estimated Period</div>
           </div>
         </div>
       </div>
-       <div class="legend">
-        <div><span class="legend-color period"></span> Period</div>
-        <div><span class="legend-color estimated"></span> Estimated Period</div>
-      </div>
-    </div>
 
-    <!-- List of all period entries -->
-    <div class="bottom-section periods-list">
-      <h2>Recorded Periods</h2>
-      <ul>
-        <li v-for="period in periods.historical" :key="period.start_date">
-          <span>Start: {{ period.start_date }} | End: {{ period.end_date }}</span>
-          <span @click="deletePeriod(period.start_date)" class="delete-icon">
-            &#x2715;
-          </span>
-        </li>
-      </ul>
+      <div class="right-column">
+        <!-- List of all period entries -->
+        <div class="bottom-section periods-list">
+          <h2>Recorded Periods</h2>
+          <ul>
+            <li v-for="period in periods.historical" :key="period.start_date">
+              <span>Start: {{ period.start_date }} | End: {{ period.end_date }}</span>
+              <span @click="deletePeriod(period.start_date)" class="delete-icon">
+                &#x2715;
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -211,6 +217,18 @@ body {
   margin: 40px auto;
   padding: 20px;
   text-align: center;
+}
+
+@media (min-width: 1024px) {
+  #app {
+    max-width: 1200px;
+  }
+  .main-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: start;
+  }
 }
 
 /* Top Section */
