@@ -64,13 +64,68 @@
         </div>
       </div>
     </div>
+
+    <footer class="app-footer">
+      <button @click="showDisclaimerModal = true">Disclaimer</button>
+      <button @click="showPrivacyModal = true">Privacy Policy</button>
+      <button @click="showTermsModal = true">Terms & Conditions</button>
+    </footer>
+
+    <!-- Modals -->
+    <Modal :show="showDisclaimerModal" @close="showDisclaimerModal = false">
+      <h3>About Our Period Estimates</h3>
+      <p>Our period estimates are calculated based on a simple but reliable method: averaging the length of your past menstrual cycles. While this approach provides a good prediction, it's important to understand that it is an estimate and not an exact forecast. Your next period may arrive a few days earlier or later than predicted.</p>
+      <p>There are several factors that can affect the accuracy of these predictions, including:</p>
+      <ul>
+        <li><strong>Irregular Cycles:</strong> If your cycles vary significantly in length from month to month, the average calculation will be less accurate.</li>
+        <li><strong>Lifestyle Changes:</strong> Factors such as stress, changes in diet, travel, or changes in sleep patterns can all impact your cycle length and make it difficult to predict.</li>
+        <li><strong>Underlying Health Conditions:</strong> Certain health conditions can cause irregular cycles that are difficult to track with a simple average.</li>
+        <li><strong>Limited Data:</strong> The more cycles you log, the more accurate the average calculation becomes. Estimates made with only a few data points will be less reliable.</li>
+      </ul>
+      <p>This app is for informational purposes only and should not be used for contraception or to diagnose any health conditions. If you have concerns about your cycle, please consult a healthcare professional.</p>
+    </Modal>
+
+    <Modal :show="showPrivacyModal" @close="showPrivacyModal = false">
+      <h3>Privacy and Data Protection</h3>
+      <p>This document outlines the privacy and data protection principles for the <strong>Crimson Cycle</strong> web application.</p>
+      <h4>Data Ownership and Control</h4>
+      <p><strong>Crimson Cycle</strong> is a self-hosted application. This means that you, the user, are the sole host, owner, and controller of your data. The application developers do not collect, store, or have any access to your personal or health data. All information you enter remains exclusively on the server you are hosting the application on.</p>
+      <h4>No Developer Data Collection</h4>
+      <p>The developers of <strong>Crimson Cycle</strong> do not track, monitor, or collect any data from your use of the application. The source code is provided for you to run in your own environment, giving you complete control and privacy. There are no third-party analytics, tracking scripts, or data transmission to external servers built into this application.</p>
+      <h4>Use of Cookies</h4>
+      <p><strong>Crimson Cycle</strong> is designed to be completely private. It <strong>does not use or create any cookies</strong> to store information in your browser. All application data is handled on the server you are hosting, ensuring no data is left behind in your browser's local storage.</p>
+      <h4>Your Responsibility for Security</h4>
+      <p>As the owner and operator of your self-hosted instance of <strong>Crimson Cycle</strong>, you are entirely responsible for the security of the server and the data it contains. To ensure the privacy and security of your information, it is essential that you operate the application behind a secure <strong>reverse proxy</strong> (such as Traefik or NGINX) and implement an <strong>authentication provider</strong> (such as Authentik, OAuth2 Proxy, or Keycloak).</p>
+      <p>These security measures are <strong>not included</strong> with the application and are necessary to protect your data from unauthorized access. Failure to implement proper security controls could expose your data to the public internet.</p>
+    </Modal>
+
+    <Modal :show="showTermsModal" @close="showTermsModal = false">
+      <h3>Terms and Conditions</h3>
+      <p>Welcome to <strong>Crimson Cycle</strong>. By using this application, you agree to these terms and conditions.</p>
+      <h4>Acceptance of Terms</h4>
+      <p>By deploying and using this self-hosted application, you acknowledge and agree to these Terms and Conditions. This is a non-commercial, open-source project provided for your personal use.</p>
+      <h4>Responsibility and Data Ownership</h4>
+      <p>The <strong>Crimson Cycle</strong> application is designed to be hosted by you, the end-user. You are solely responsible for the operation, maintenance, and security of your instance. The developers and contributors of this application do not own, manage, or have any access to your data. All data is stored locally on your server, and you are its sole owner.</p>
+      <h4>Disclaimer of Warranties</h4>
+      <p><strong>Crimson Cycle</strong> is provided "as is," without warranty of any kind, express or implied. The developers make no guarantees regarding its functionality, security, or accuracy. You assume all risks associated with your use of the application.</p>
+      <h4>Limitation of Liability</h4>
+      <p>In no event shall the developers or contributors be liable for any damages, including but not limited to direct, indirect, special, incidental, or consequential damages, arising out of your use or inability to use the application, even if advised of the possibility of such damages.</p>
+      <h4>Security Responsibility</h4>
+      <p>The application is provided as a core functional component. It does not include built-in security features such as user authentication or protection from public exposure. To ensure the security and privacy of your data, <strong>you are required to implement these measures yourself.</strong> This includes, but is not limited to, using a <strong>reverse proxy</strong> and an <strong>authentication provider</strong> to restrict access to your instance. Your failure to do so is at your own risk.</p>
+      <h4>Changes to Terms</h4>
+      <p>These terms may be updated from time to time. Your continued use of the application after any changes signifies your acceptance of the new terms.</p>
+    </Modal>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
+import Modal from './components/Modal.vue';
 
 export default {
+  components: {
+    Modal,
+  },
   data() {
     return {
       // Object to store period data fetched from the backend
@@ -88,7 +143,11 @@ export default {
       statusType: 'success', // can be 'success' or 'error'
       // Calendar-related data
       currentDate: new Date(),
-      weekdays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+      weekdays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+      // Modal visibility state
+      showDisclaimerModal: false,
+      showPrivacyModal: false,
+      showTermsModal: false,
     };
   },
   computed: {
@@ -423,6 +482,27 @@ li:last-child {
   }
   .legend-color.estimated {
     background-color: #4a4a4a;
+  }
+}
+
+/* Footer and Modal Buttons */
+.app-footer {
+  text-align: center;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid #EED9C4;
+}
+.app-footer button {
+  background: none;
+  border: none;
+  color: #A3438E;
+  cursor: pointer;
+  margin: 0 1rem;
+  font-size: 0.9rem;
+}
+@media (prefers-color-scheme: dark) {
+  .app-footer {
+    border-top-color: #3a3a3a;
   }
 }
 </style>
