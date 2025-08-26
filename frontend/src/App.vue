@@ -42,7 +42,7 @@
       </div>
        <div class="legend">
         <div><span class="legend-color period"></span> Period</div>
-        <div><span class="legend-color estimated"></span> Estimated Next Period</div>
+        <div><span class="legend-color estimated"></span> Estimated Period</div>
       </div>
     </div>
 
@@ -50,7 +50,7 @@
     <div class="bottom-section periods-list">
       <h2>Recorded Periods</h2>
       <ul>
-        <li v-for="period in periods" :key="period.start_date">
+        <li v-for="period in periods.historical" :key="period.start_date">
           <span>Start: {{ period.start_date }} | End: {{ period.end_date }}</span>
           <span @click="deletePeriod(period.start_date)" class="delete-icon">
             &#x2715;
@@ -67,8 +67,11 @@ import axios from 'axios';
 export default {
   data() {
     return {
-      // Array to store period data fetched from the backend
-      periods: [],
+      // Object to store period data fetched from the backend
+      periods: {
+        historical: [],
+        estimated: []
+      },
       // Object to hold data for the new period being added
       newPeriod: {
         start_date: '',
@@ -115,39 +118,6 @@ export default {
         });
       }
       return days;
-    },
-    // Calculates the estimated next period
-    estimatedNextPeriod() {
-        if (this.periods.length < 2) return null;
-
-        let cycleLengths = [];
-        // Sort periods by start date to calculate cycles correctly
-        const sortedPeriods = [...this.periods].sort((a, b) => new Date(a.start_date) - new Date(b.start_date));
-
-        for (let i = 1; i < sortedPeriods.length; i++) {
-            const startDate1 = new Date(sortedPeriods[i-1].start_date);
-            const startDate2 = new Date(sortedPeriods[i].start_date);
-            const diffTime = Math.abs(startDate2 - startDate1);
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-            cycleLengths.push(diffDays);
-        }
-
-        if(cycleLengths.length === 0) return null;
-
-        const avgCycleLength = cycleLengths.reduce((a, b) => a + b, 0) / cycleLengths.length;
-        const lastPeriod = sortedPeriods[sortedPeriods.length - 1];
-        const lastStartDate = new Date(lastPeriod.start_date);
-
-        const estimatedStartDate = new Date(lastStartDate.setDate(lastStartDate.getDate() + avgCycleLength));
-
-        // Assume the period length is the same as the last recorded one
-        const lastPeriodLength = (new Date(lastPeriod.end_date) - new Date(lastPeriod.start_date)) / (1000 * 60 * 60 * 24);
-        const estimatedEndDate = new Date(new Date(estimatedStartDate).setDate(estimatedStartDate.getDate() + lastPeriodLength));
-
-        return {
-            start: estimatedStartDate,
-            end: estimatedEndDate
-        };
     }
   },
   methods: {
@@ -158,6 +128,8 @@ export default {
         this.periods = response.data;
       } catch (error) {
         this.showStatus('Error fetching periods', 'error');
+        // Ensure periods object has the correct structure on error
+        this.periods = { historical: [], estimated: [] };
       }
     },
     // Adds a new period
@@ -171,7 +143,7 @@ export default {
         this.showStatus('Period added successfully', 'success');
         this.newPeriod.start_date = '';
         this.newPeriod.end_date = '';
-        this.fetchPeriods(); // Refresh the list
+        this.fetchPeriods(); // Refresh the list and get new estimations
       } catch (error) {
         this.showStatus('Error adding period', 'error');
       }
@@ -181,7 +153,7 @@ export default {
       try {
         await axios.delete(`/api/periods/${startDate}`);
         this.showStatus('Period deleted successfully', 'success');
-        this.fetchPeriods(); // Refresh the list
+        this.fetchPeriods(); // Refresh the list and get new estimations
       } catch (error) {
         this.showStatus('Error deleting period', 'error');
       }
@@ -206,21 +178,16 @@ export default {
       const classes = [];
       const dateStr = date.toISOString().split('T')[0];
 
-      // Check for recorded periods
-      if (this.periods.some(p => dateStr >= p.start_date && dateStr <= p.end_date)) {
+      // Check for recorded historical periods
+      if (this.periods.historical.some(p => dateStr >= p.start_date && dateStr <= p.end_date)) {
         classes.push('period');
       }
 
-      // Check for estimated next period
-      if (this.estimatedNextPeriod) {
-          const estStart = new Date(this.estimatedNextPeriod.start);
-          estStart.setHours(0,0,0,0);
-          const estEnd = new Date(this.estimatedNextPeriod.end);
-          estEnd.setHours(0,0,0,0);
-          if (date >= estStart && date <= estEnd) {
-              classes.push('estimated');
-          }
+      // Check for estimated future periods
+      if (this.periods.estimated.some(p => dateStr >= p.start_date && dateStr <= p.end_date)) {
+        classes.push('estimated');
       }
+
       return classes.join(' ');
     }
   },

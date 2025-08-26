@@ -10,7 +10,7 @@ The entire application is containerized using Docker, making it easy to deploy a
 -   **View History:** See a list of all your past period entries.
 -   **Delete Entries:** Remove any entry with a single click.
 -   **Calendar View:** Visualize your past periods on a monthly calendar.
--   **Next Period Estimation:** Get an automatic calculation of your estimated next period based on your cycle history.
+-   **Future Period Estimation:** Get an automatic calculation of your estimated periods for the next three years based on your cycle history.
 -   **Status Notifications:** Receive feedback for your actions (e.g., "Period added successfully").
 -   **Persistent Storage:** Your data is safely stored in a JSON file on a Docker volume, so it persists even if the container is restarted.
 -   **Self-Hosted:** You have full control over your data.
@@ -32,9 +32,9 @@ The backend is a simple Flask application that exposes a REST API for managing p
 
 The API has the following endpoints:
 
--   `GET /api/periods`: Retrieves all period entries.
--   `POST /api/periods`: Adds a new period entry.
--   `DELETE /api/periods/<start_date>`: Deletes a specific period entry.
+-   `GET /api/periods`: Retrieves all period entries. The response is a JSON object with two keys: `historical` (an array of user-recorded periods) and `estimated` (an array of future periods calculated by the backend).
+-   `POST /api/periods`: Adds a new period entry. When a new period is added, the backend recalculates the future estimated periods.
+-   `DELETE /api/periods/<start_date>`: Deletes a specific period entry. When a period is deleted, the backend recalculates the future estimated periods.
 
 ### Frontend
 
