@@ -2,7 +2,6 @@
   <div id="app">
     <div class="top-section">
       <img src="https://github.com/bboti86/crimson/blob/main/crimson_logo.png?raw=true" alt="Crimson Cycle Logo" class="logo">
-      <h1>Crimson Cycle</h1>
       <p>Your secure, private cycle tracker.</p>
     </div>
 
@@ -249,14 +248,9 @@ body {
 
 /* Top Section */
 .logo {
-  width: 100px;
-  height: 100px;
+  width: 200px;
+  height: 200px;
   margin-bottom: 1rem;
-}
-.top-section h1 {
-  font-size: 3rem;
-  font-weight: normal;
-  margin-bottom: 0.5rem;
 }
 .top-section p {
   font-size: 1rem;
