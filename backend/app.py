@@ -162,9 +162,3 @@ def delete_period(start_date):
     else:
         # If no period was found with the given start_date, return an error
         return jsonify({'message': 'Period not found'}), 404
-
-# This block ensures that the Flask development server runs when the script is executed directly
-if __name__ == '__main__':
-    # The host '0.0.0.0' makes the server accessible from any IP address,
-    # which is necessary for it to be reachable from other Docker containers.
-    app.run(host='0.0.0.0', port=5000, debug=True)
