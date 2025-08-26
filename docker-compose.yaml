@@ -1,7 +1,6 @@
 services:
   backend:
-    build: ./backend
-    container_name: crimson-cycle-backend
+    image: bboti86/crimson-cycle-backend:latest
     volumes:
       - ./backend/data:/app/data
     ports:
@@ -9,8 +8,7 @@ services:
     restart: always
 
   frontend:
-    build: ./frontend
-    container_name: crimson-cycle-frontend
+    image: bboti86/crimson-cycle-frontend:latest
     ports:
       - "8888:80"
     depends_on:

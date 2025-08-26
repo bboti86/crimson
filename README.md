@@ -59,14 +59,14 @@ To run Crimson Cycle, you need to have Docker and Docker Compose installed on yo
     cd crimson-cycle
     ```
 
-2.  **Build and run the application:**
+2.  **Run the application:**
     ```bash
-    docker-compose up --build
+    docker-compose up -d
     ```
-    This command will build the Docker images for the backend and frontend services and then start the containers.
+    This command will pull the pre-built images from Docker Hub and start the application in detached mode.
 
 3.  **Access the application:**
-    Once the containers are running, you can access the Crimson Cycle web interface by navigating to `http://localhost:8080` in your web browser.
+    Once the containers are running, you can access the Crimson Cycle web interface by navigating to `http://localhost:8888` in your web browser.
 
 ## Codebase Overview
 
