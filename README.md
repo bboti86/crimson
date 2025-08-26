@@ -66,7 +66,7 @@ To run Crimson Cycle, you need to have Docker and Docker Compose installed on yo
     This command will build the Docker images for the backend and frontend services and then start the containers.
 
 3.  **Access the application:**
-    Once the containers are running, you can access the Crimson Cycle web interface by navigating to `http://localhost:8080` in your web browser.
+    Once the containers are running, you can access the Crimson Cycle web interface by navigating to `http://localhost:8888` in your web browser.
 
 ## Codebase Overview
 
